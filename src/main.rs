@@ -1,5 +1,39 @@
 use std::io::{Write, Result};
 use std::fs::File;
+use std::ops::{Add, Mul};
+
+
+struct Vec3 {
+    e: [f64; 3],
+}
+
+impl Vec3 {
+    fn x(self) -> f64 {self.e[0]}
+    fn y(self) -> f64 {self.e[1]}
+    fn z(self) -> f64 {self.e[2]}
+
+    fn r(self) -> f64 {self.e[0]}
+    fn g(self) -> f64 {self.e[1]}
+    fn b(self) -> f64 {self.e[2]}
+
+}
+
+impl Vec3 {
+    fn new(v:[f64; 3]) -> Self {
+        Vec3{e: v}
+    }
+}
+
+impl Add for Vec3 {
+    type Output = Self;
+
+    fn add(self, rhs:Vec3) -> Self {
+        Vec3{e: [self.e[0] + rhs.e[0],
+                 self.e[1] + rhs.e[1],
+                 self.e[2] + rhs.e[2]]}
+    }
+}
+
 
 fn ppm_example() -> Result<()> {
 
