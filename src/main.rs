@@ -1,102 +1,16 @@
 use std::io::{Write, Result};
 use std::fs::File;
-use std::ops::{Add, Sub, Mul, Div};
 
-#[derive(Copy, Clone)]
-struct Vec3 {
-    e: [f64; 3],
-}
+mod vec3;
+use vec3::Vec3;
 
-impl Vec3 {
-    pub fn x(self) -> f64 {self.e[0]}
-    pub fn y(self) -> f64 {self.e[1]}
-    pub fn z(self) -> f64 {self.e[2]}
+mod ray;
+use ray::Ray;
 
-    pub fn r(self) -> f64 {self.e[0]}
-    pub fn g(self) -> f64 {self.e[1]}
-    pub fn b(self) -> f64 {self.e[2]}
-
-}
-
-impl Vec3 {
-    pub fn new(v:[f64; 3]) -> Self {
-        Vec3{e: v}
-    }
-
-    pub fn length(&self) -> f64 {
-        (self.e[0] * self.e[0] + self.e[1] * self.e[1] + self.e[2] * self.e[2]).sqrt()
-    }
-
-    pub fn mul_by_float(self, t: f64) -> Vec3 {
-        Vec3{e:[t * self.e[0], t * self.e[1], t * self.e[2]]}
-    }
-
-    pub fn div_by_float(self, t: f64) -> Vec3 {
-        Vec3{e:[ self.e[0]/t, self.e[1] / t, self.e[2] / t]}
-    }
-}
-
-impl Add for Vec3 {
-    type Output = Vec3;
-
-    fn add(self, rhs:Vec3) -> Self {
-        Vec3{e: [self.e[0] + rhs.e[0],
-                 self.e[1] + rhs.e[1],
-                 self.e[2] + rhs.e[2]]}
-    }
-}
-
-impl Sub for Vec3 {
-    type Output = Vec3;
-
-    fn sub(self, rhs:Vec3) -> Self {
-        Vec3{e: [self.e[0] - rhs.e[0],
-                 self.e[1] - rhs.e[1],
-                 self.e[2] - rhs.e[2]]}
-    }
-}
-
-impl Mul for Vec3 {
-    type Output = Vec3;
-
-    fn mul(self, rhs:Vec3) -> Self {
-        Vec3{e: [self.e[0] * rhs.e[0],
-                 self.e[1] * rhs.e[1],
-                 self.e[2] * rhs.e[2]]}
-    }
-}
-
-impl Div for Vec3 {
-    type Output = Vec3;
-
-    fn div(self, rhs:Vec3) -> Self {
-        Vec3{e: [self.e[0] / rhs.e[0],
-                 self.e[1] / rhs.e[1],
-                 self.e[2] / rhs.e[2]]}
-    }
-}
-
-
-
-struct Ray {
-    a: Vec3,
-    b: Vec3
-}
-
-impl Ray {
-    fn new(a_: Vec3, b_: Vec3) -> Self { Ray{a: a_, b: b_} }
-
-    pub fn origin(self) -> Vec3 {
-        self.a
-    }
-
-    pub fn direction(self) -> Vec3 {
-        self.b
-    }
-
-    pub fn point_of_parameter(self, t: f64) -> Vec3 {
-        self.a + self.b.mul_by_float(t)
-    }
+fn color(r: Ray) -> Vec3 {
+    let unit_direction = vec3::unit_vector(r.direction());
+    let t = 0.5 * (unit_direction.y() + 1.0);
+    Vec3{e:[1.0, 1.0, 1.0]}.mul_by_float(1.0 - t) + Vec3{e:[0.5, 0.7, 1.0]}.mul_by_float(t)
 }
 
 fn ppm_example() -> Result<()> {
@@ -135,17 +49,6 @@ fn ppm_example() -> Result<()> {
         }
     }
     Ok(())
-}
-
-fn unit_vector(v: Vec3) -> Vec3 {
-    let length = v.length();
-    v.div_by_float(length)
-}
-
-fn color(r: Ray) -> Vec3 {
-    let unit_direction = unit_vector(r.direction());
-    let t = 0.5 * (unit_direction.y() + 1.0);
-    Vec3{e:[1.0, 1.0, 1.0]}.mul_by_float(1.0 - t) + Vec3{e:[0.5, 0.7, 1.0]}.mul_by_float(t)
 }
 
 fn main() {
