@@ -15,8 +15,6 @@ fn hit_sphere(center: Vec3, radius:f64, r:&Ray) -> bool {
     let c = vec3::dot(&origin_at_center, &origin_at_center) - radius * radius;
     let discriminant = (b * b) - (4.0 * a * c);
 
-
-    println!("{}", discriminant);
     discriminant > 0.0
 }
 
@@ -30,12 +28,11 @@ fn color(r: &Ray) -> Vec3 {
     Vec3{e:[1.0, 1.0, 1.0]}.mul_by_float(1.0 - t) + Vec3{e:[0.5, 0.7, 1.0]}.mul_by_float(t)
 }
 
-fn ppm_example() -> Result<()> {
+fn render_ppm() -> Result<()> {
 
     let mut buffer = File::create("helloworld.ppm")?;
 
 
-    /* Graphics Hello World!*/
     let nx = 200;
     let ny = 100;
 
@@ -56,7 +53,6 @@ fn ppm_example() -> Result<()> {
                                                     vertical.mul_by_float(v));
 
             let col = color(&r);
-            // let col = Vec3::new([i as f64 / nx as f64, j as f64 / ny as f64, 0.2]);
 
             let ir = (255.99 * col.e[0]) as i64;
             let ig = (255.99 * col.e[1]) as i64;
@@ -69,5 +65,5 @@ fn ppm_example() -> Result<()> {
 }
 
 fn main() {
-    let _x = ppm_example().unwrap();
+    let _x = render_ppm().unwrap();
 }
