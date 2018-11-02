@@ -2,22 +2,25 @@
 use vec3::Vec3;
 
 pub struct Ray {
-    a: Vec3,
-    b: Vec3
+    origin: Vec3,
+    direction: Vec3
 }
 
 impl Ray {
-    pub fn new(a_: Vec3, b_: Vec3) -> Self { Ray{a: a_, b: b_} }
+    pub fn new(origin: Vec3, direction: Vec3) -> Self { Ray{ origin, direction} }
 
-    pub fn origin(self) -> Vec3 {
-        self.a
+    pub fn origin(&self) -> &Vec3 {
+
+        &self.origin
     }
 
-    pub fn direction(self) -> Vec3 {
-        self.b
+    pub fn direction(&self) -> &Vec3 {
+
+        &self.direction
     }
 
     pub fn point_of_parameter(self, t: f64) -> Vec3 {
-        self.a + self.b.mul_by_float(t)
+
+        self.origin + self.direction.mul_by_float(t)
     }
 }

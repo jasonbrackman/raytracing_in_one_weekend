@@ -7,8 +7,25 @@ use vec3::Vec3;
 mod ray;
 use ray::Ray;
 
-fn color(r: Ray) -> Vec3 {
-    let unit_direction = vec3::unit_vector(r.direction());
+fn hit_sphere(center: Vec3, radius:f64, r:&Ray) -> bool {
+
+    let origin_at_center = *r.origin() - center;
+    let a = vec3::dot(r.direction(), r.direction());
+    let b = 2.0 * vec3::dot(&origin_at_center, r.direction());
+    let c = vec3::dot(&origin_at_center, &origin_at_center) - radius * radius;
+    let discriminant = (b * b) - (4.0 * a * c);
+
+
+    println!("{}", discriminant);
+    discriminant > 0.0
+}
+
+fn color(r: &Ray) -> Vec3 {
+    if hit_sphere(Vec3{e:[0.0, 0.0, -1.0]}, 0.5, r) {
+        return Vec3{e:[1.0, 0.0 , 0.0]};
+    }
+
+    let unit_direction = vec3::unit_vector(*r.direction());
     let t = 0.5 * (unit_direction.y() + 1.0);
     Vec3{e:[1.0, 1.0, 1.0]}.mul_by_float(1.0 - t) + Vec3{e:[0.5, 0.7, 1.0]}.mul_by_float(t)
 }
@@ -38,7 +55,7 @@ fn ppm_example() -> Result<()> {
                                                     horizontal.mul_by_float(u) +
                                                     vertical.mul_by_float(v));
 
-            let col = color(r);
+            let col = color(&r);
             // let col = Vec3::new([i as f64 / nx as f64, j as f64 / ny as f64, 0.2]);
 
             let ir = (255.99 * col.e[0]) as i64;
