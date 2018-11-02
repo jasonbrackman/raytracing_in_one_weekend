@@ -1,0 +1,6 @@
+[package]
+name = "raytracinginoneweekend"
+version = "0.1.0"
+authors = ["jasonbrackman <brackman@gmail.com>"]
+
+[dependencies]
