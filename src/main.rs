@@ -7,20 +7,25 @@ use vec3::Vec3;
 mod ray;
 use ray::Ray;
 
-fn hit_sphere(center: Vec3, radius:f64, r:&Ray) -> bool {
+fn hit_sphere(center: Vec3, radius:f64, r:&Ray) -> f64 {
 
     let origin_at_center = *r.origin() - center;
     let a = vec3::dot(r.direction(), r.direction());
     let b = 2.0 * vec3::dot(&origin_at_center, r.direction());
     let c = vec3::dot(&origin_at_center, &origin_at_center) - radius * radius;
     let discriminant = (b * b) - (4.0 * a * c);
-
-    discriminant > 0.0
+    if discriminant < 0.0 {
+        -1.0
+    } else {
+        (-b - discriminant.sqrt()) / 2.0 * a
+    }
 }
 
 fn color(r: &Ray) -> Vec3 {
-    if hit_sphere(Vec3{e:[0.0, 0.0, -1.0]}, 0.5, r) {
-        return Vec3{e:[1.0, 0.0 , 0.0]};
+    let t =  hit_sphere(Vec3{e:[0.0, 0.0, -1.0]}, 0.5, r);
+    if t > 0.0 {
+        let n = vec3::unit_vector(r.point_of_parameter(t) - Vec3{e:[0.0, 0.0, -1.0]});
+        return Vec3{e:[n.x() + 1.0, n.y() + 1.0 , n.z() + 1.0]}.mul_by_float(0.5);
     }
 
     let unit_direction = vec3::unit_vector(*r.direction());

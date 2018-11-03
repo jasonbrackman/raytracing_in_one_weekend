@@ -19,7 +19,7 @@ impl Ray {
         &self.direction
     }
 
-    pub fn point_of_parameter(self, t: f64) -> Vec3 {
+    pub fn point_of_parameter(&self, t: f64) -> Vec3 {
 
         self.origin + self.direction.mul_by_float(t)
     }
