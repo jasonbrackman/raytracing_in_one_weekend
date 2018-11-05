@@ -52,8 +52,6 @@ fn color(r: &Ray, world: &HitableList) -> Vec3 {
 
         let temp_r = Ray::new(rec.p, target-rec.p);
         return color( &temp_r, world).mul_by_float(0.5) ;
-//        return Vec3 {
-//            e: [rec.normal.x() + 1.0, rec.normal.y() + 1.0, rec.normal.z() + 1.0] }.mul_by_float(0.5);
 
     } else {
         let unit_direction = vec3::unit_vector(*r.direction());
@@ -95,7 +93,7 @@ fn render_ppm() -> Result<()> {
             }
 
             col = col.div_by_float(ns as f64);
-
+            col = Vec3{e:[col.r().sqrt(), col.g().sqrt(), col.b().sqrt()]};
 
             let ir = (255.99 * col.e[0]) as i64;
             let ig = (255.99 * col.e[1]) as i64;

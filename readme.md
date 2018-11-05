@@ -25,6 +25,6 @@ Step 6: Antialiasing
 
 <img src="renders/ppm_antialiasing_full.png" width="420" height="224" /><img src="renders/ppm_antialiasing.png" width="420" height="224" />
 
-Step 7: Diffuse Materials (uncorrected)
+Step 7: Diffuse Materials (uncorrected/gamma corrected)
 
-<img src="renders/ppm_diffuse_uncorrected.png" width="420" height="224" />
+<img src="renders/ppm_diffuse_uncorrected.png" width="420" height="224" /><img src="renders/ppm_diffuse_corrected.png" width="420" height="224" />
