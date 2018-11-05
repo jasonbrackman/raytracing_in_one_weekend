@@ -15,13 +15,6 @@ impl Camera {
             lower_left_corner: Vec3{e:[-2.0, -1.0, -1.0]},
             horizontal: Vec3{e:[4.0, 0.0, 0.0]},
             vertical: Vec3{e:[0.0, 2.0, 0.0]}
-
-
-            //let lower_left_corner = Vec3{e:[-2.0, -1.0, -1.0]};
-    //let horizontal = Vec3{e:[4.0, 0.0, 0.0]};
-    //let vertical = Vec3{e:[0.0, 2.0, 0.0]};
-
-
         }
     }
 

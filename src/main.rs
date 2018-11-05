@@ -20,7 +20,6 @@ mod sphere;
 use sphere::Sphere;
 
 mod camera;
-//use camera::Camera;
 
 fn hit_sphere(center: Vec3, radius:f64, r:&Ray) -> f64 {
 
@@ -62,11 +61,6 @@ fn render_ppm() -> Result<()> {
     let ns = 100;
 
     write!(buffer, "P3\n{} {}\n255\n", nx, ny);
-
-    //let lower_left_corner = Vec3{e:[-2.0, -1.0, -1.0]};
-    //let horizontal = Vec3{e:[4.0, 0.0, 0.0]};
-    //let vertical = Vec3{e:[0.0, 2.0, 0.0]};
-    //let origin = Vec3{e:[0.0, 0.0, 0.0]};
 
     let sphere_01 = Sphere{center:Vec3{e:[0.0, 0.0, -1.0]}, radius:0.5};
     let sphere_02 = Sphere{center:Vec3{e:[0.0, -100.5, -1.0]}, radius:100.0};
