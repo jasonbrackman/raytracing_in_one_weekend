@@ -27,4 +27,8 @@ Step 6: Antialiasing
 
 Step 7: Diffuse Materials (uncorrected/gamma corrected)
 
-<img src="renders/ppm_diffuse_uncorrected.png" width="420" height="224" /><img src="renders/ppm_diffuse_corrected.png" width="420" height="224" /><img src="renders/ppm_diffuse_corrected_acne_free.png" width="420" height="224" />
+<img src="renders/ppm_diffuse_uncorrected.png" width="420" height="224" /><img src="renders/ppm_diffuse_corrected.png" width="420" height="224" />
+
+Removed 'Shadow Acne':
+
+<img src="renders/ppm_diffuse_corrected_acne_free.png" width="420" height="224" />
