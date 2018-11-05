@@ -29,6 +29,10 @@ impl Vec3 {
     pub fn div_by_float(self, t: f64) -> Vec3 {
         Vec3{e:[ self.e[0]/t, self.e[1] / t, self.e[2] / t]}
     }
+
+    pub fn squared_length(&self) -> f64 {
+        self.e[0] * self.e[0] + self.e[1] * self.e[1] + self.e[2] * self.e[2]
+    }
 }
 
 impl Add for Vec3 {
@@ -79,3 +83,4 @@ pub fn unit_vector(v: Vec3) -> Vec3 {
 pub fn dot(v1: &Vec3, v2: &Vec3) -> f64 {
     v1.e[0] * v2.e[0] + v1.e[1] * v2.e[1] + v1.e[2] * v2.e[2]
 }
+

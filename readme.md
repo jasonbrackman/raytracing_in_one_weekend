@@ -24,3 +24,7 @@ Step 5: Adding Multiple 'Hitables' to the 'world'
 Step 6: Antialiasing
 
 <img src="renders/ppm_antialiasing_full.png" width="420" height="224" /><img src="renders/ppm_antialiasing.png" width="420" height="224" />
+
+Step 7: Diffuse Materials (uncorrected)
+
+<img src="renders/ppm_diffuse_uncorrected.png" width="420" height="224" />

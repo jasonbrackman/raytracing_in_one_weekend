@@ -1,4 +1,5 @@
 extern crate rand;
+use rand::{random};
 
 use std::io::{Write, Result};
 use std::fs::File;
@@ -8,7 +9,6 @@ use hitable::{Hitable, HitRecord};
 
 mod hitablelist;
 use hitablelist::HitableList;
-
 
 mod vec3;
 use vec3::Vec3;
@@ -35,15 +35,26 @@ fn hit_sphere(center: Vec3, radius:f64, r:&Ray) -> f64 {
     }
 }
 
+fn random_in_unit_sphere() -> Vec3 {
+    let mut p = Vec3{e:[1.0, 1.0, 1.0]};
+    while p.squared_length() > 1.0 {
+        p = Vec3{e:[random::<f64>(), random::<f64>(), random::<f64>()]}.mul_by_float(2.0) - Vec3{e:[1.0, 1.0, 1.0]};
+    };
+
+    p
+}
+
 fn color(r: &Ray, world: &HitableList) -> Vec3 {
     let maxfloat = 10.0 * 100000000000.0;
     let rec = &mut HitRecord::new();
     if world.hit(r, 0.0, maxfloat, rec) {
-        return Vec3 {
-            e: [rec.normal.x() + 1.0,
-                rec.normal.y() + 1.0,
-                rec.normal.z() + 1.0]
-        }.mul_by_float(0.5);
+        let target = rec.p + rec.normal + random_in_unit_sphere();
+
+        let temp_r = Ray::new(rec.p, target-rec.p);
+        return color( &temp_r, world).mul_by_float(0.5) ;
+//        return Vec3 {
+//            e: [rec.normal.x() + 1.0, rec.normal.y() + 1.0, rec.normal.z() + 1.0] }.mul_by_float(0.5);
+
     } else {
         let unit_direction = vec3::unit_vector(*r.direction());
         let t = 0.5 * (unit_direction.y() + 1.0);
@@ -76,8 +87,8 @@ fn render_ppm() -> Result<()> {
         for i in 0..nx {
             let mut col = Vec3{e:[0.0, 0.0, 0.0]};
             for _s in 0..ns {
-                let u = (i as f64 + rand::random::<f64>()) / nx as f64;
-                let v = (j as f64 + rand::random::<f64>()) / ny as f64;
+                let u = (i as f64 + random::<f64>()) / nx as f64;
+                let v = (j as f64 + random::<f64>()) / ny as f64;
                 let r = cam.get_ray(u, v);
                 let p = r.point_at_parameter(2.0);
                 col = col + color(&r, &world);
@@ -97,5 +108,6 @@ fn render_ppm() -> Result<()> {
 }
 
 fn main() {
+    //random_in_unit_sphere();
     let _x = render_ppm().unwrap();
 }
