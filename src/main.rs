@@ -32,22 +32,19 @@ fn hit_sphere(center: Vec3, radius:f64, r:&Ray) -> f64 {
 }
 
 fn color(r: &Ray, world: &HitableList) -> Vec3 {
+    let maxfloat = 10.0 * 100000000000.0;
     let rec = &mut HitRecord::new();
-    if world.hit(r, 0.0, 10.0 * 100000000000.0, rec) {
-        return Vec3{e:[rec.normal.x() + 1.0,
-            rec.normal.y() + 1.0,
-            rec.normal.z() + 1.0]}.mul_by_float(0.5);
+    if world.hit(r, 0.0, maxfloat, rec) {
+        return Vec3 {
+            e: [rec.normal.x() + 1.0,
+                rec.normal.y() + 1.0,
+                rec.normal.z() + 1.0]
+        }.mul_by_float(0.5);
+    } else {
+        let unit_direction = vec3::unit_vector(*r.direction());
+        let t = 0.5 * (unit_direction.y() + 1.0);
+        Vec3 { e: [1.0, 1.0, 1.0] }.mul_by_float(1.0 - t) + Vec3 { e: [0.5, 0.7, 1.0] }.mul_by_float(t)
     }
-
-    let t =  hit_sphere(Vec3{e:[0.0, 0.0, -1.0]}, 0.5, r);
-    if t > 0.0 {
-        let n = vec3::unit_vector(r.point_of_parameter(t) - Vec3{e:[0.0, 0.0, -1.0]});
-        return Vec3{e:[n.x() + 1.0, n.y() + 1.0 , n.z() + 1.0]}.mul_by_float(0.5);
-    }
-
-    let unit_direction = vec3::unit_vector(*r.direction());
-    let t = 0.5 * (unit_direction.y() + 1.0);
-    Vec3{e:[1.0, 1.0, 1.0]}.mul_by_float(1.0 - t) + Vec3{e:[0.5, 0.7, 1.0]}.mul_by_float(t)
 }
 
 fn render_ppm() -> Result<()> {
