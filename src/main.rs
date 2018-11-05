@@ -1,3 +1,5 @@
+extern crate rand;
+
 use std::io::{Write, Result};
 use std::fs::File;
 
@@ -16,6 +18,9 @@ use ray::Ray;
 
 mod sphere;
 use sphere::Sphere;
+
+mod camera;
+//use camera::Camera;
 
 fn hit_sphere(center: Vec3, radius:f64, r:&Ray) -> f64 {
 
@@ -54,13 +59,14 @@ fn render_ppm() -> Result<()> {
 
     let nx = 200;
     let ny = 100;
+    let ns = 100;
 
     write!(buffer, "P3\n{} {}\n255\n", nx, ny);
 
-    let lower_left_corner = Vec3{e:[-2.0, -1.0, -1.0]};
-    let horizontal = Vec3{e:[4.0, 0.0, 0.0]};
-    let vertical = Vec3{e:[0.0, 2.0, 0.0]};
-    let origin = Vec3{e:[0.0, 0.0, 0.0]};
+    //let lower_left_corner = Vec3{e:[-2.0, -1.0, -1.0]};
+    //let horizontal = Vec3{e:[4.0, 0.0, 0.0]};
+    //let vertical = Vec3{e:[0.0, 2.0, 0.0]};
+    //let origin = Vec3{e:[0.0, 0.0, 0.0]};
 
     let sphere_01 = Sphere{center:Vec3{e:[0.0, 0.0, -1.0]}, radius:0.5};
     let sphere_02 = Sphere{center:Vec3{e:[0.0, -100.5, -1.0]}, radius:100.0};
@@ -70,17 +76,21 @@ fn render_ppm() -> Result<()> {
         &sphere_02);
 
     let world = hitablelist::HitableList{hit_records: objects};
+    let cam = &camera::Camera::new();
 
     for j in (0..ny).rev() {
         for i in 0..nx {
-            let u = i as f64 / nx as f64;
-            let v = j as f64 / ny as f64;
+            let mut col = Vec3{e:[0.0, 0.0, 0.0]};
+            for _s in 0..ns {
+                let u = (i as f64 + rand::random::<f64>()) / nx as f64;
+                let v = (j as f64 + rand::random::<f64>()) / ny as f64;
+                let r = cam.get_ray(u, v);
+                let p = r.point_at_parameter(2.0);
+                col = col + color(&r, &world);
+            }
 
-            let r = Ray::new(origin,  lower_left_corner +
-                                                    horizontal.mul_by_float(u) +
-                                                    vertical.mul_by_float(v));
+            col = col.div_by_float(ns as f64);
 
-            let col = color(&r, &world);
 
             let ir = (255.99 * col.e[0]) as i64;
             let ig = (255.99 * col.e[1]) as i64;

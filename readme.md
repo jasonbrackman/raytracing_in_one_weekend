@@ -20,3 +20,7 @@ Step 4: Surface Normals
 Step 5: Adding Multiple 'Hitables' to the 'world'
 
 <img src="ppm_multiple_spheres.png" width="420" height="224" />
+
+Step 6: Antialiasing
+
+<img src="ppm_antialiasing.png" width="420" height="224" />

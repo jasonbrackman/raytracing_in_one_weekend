@@ -20,7 +20,7 @@ impl Hitable for Sphere {
             let mut temp = (-b - (b*b-a*c).sqrt()) / a;
             if temp < t_max && temp  > t_min {
                 rec.t = temp;
-                rec.p = r.point_of_parameter(rec.t);
+                rec.p = r.point_at_parameter(rec.t);
                 rec.normal = (rec.p - self.center).div_by_float(self.radius);
 
                 return true;
@@ -28,7 +28,7 @@ impl Hitable for Sphere {
             temp = (-b + (b*b-a*c).sqrt()) / a;
             if temp < t_max && temp > t_min {
                 rec.t = temp;
-                rec.p = r.point_of_parameter(rec.t);
+                rec.p = r.point_at_parameter(rec.t);
                 rec.normal = (rec.p - self.center).div_by_float(self.radius);
 
                 return true;
