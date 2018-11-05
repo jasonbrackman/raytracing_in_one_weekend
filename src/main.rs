@@ -1,11 +1,21 @@
 use std::io::{Write, Result};
 use std::fs::File;
 
+mod hitable;
+use hitable::{Hitable, HitRecord};
+
+mod hitablelist;
+use hitablelist::HitableList;
+
+
 mod vec3;
 use vec3::Vec3;
 
 mod ray;
 use ray::Ray;
+
+mod sphere;
+use sphere::Sphere;
 
 fn hit_sphere(center: Vec3, radius:f64, r:&Ray) -> f64 {
 
@@ -21,7 +31,14 @@ fn hit_sphere(center: Vec3, radius:f64, r:&Ray) -> f64 {
     }
 }
 
-fn color(r: &Ray) -> Vec3 {
+fn color(r: &Ray, world: &HitableList) -> Vec3 {
+    let rec = &mut HitRecord::new();
+    if world.hit(r, 0.0, 10.0 * 100000000000.0, rec) {
+        return Vec3{e:[rec.normal.x() + 1.0,
+            rec.normal.y() + 1.0,
+            rec.normal.z() + 1.0]}.mul_by_float(0.5);
+    }
+
     let t =  hit_sphere(Vec3{e:[0.0, 0.0, -1.0]}, 0.5, r);
     if t > 0.0 {
         let n = vec3::unit_vector(r.point_of_parameter(t) - Vec3{e:[0.0, 0.0, -1.0]});
@@ -48,6 +65,15 @@ fn render_ppm() -> Result<()> {
     let vertical = Vec3{e:[0.0, 2.0, 0.0]};
     let origin = Vec3{e:[0.0, 0.0, 0.0]};
 
+    let sphere_01 = Sphere{center:Vec3{e:[0.0, 0.0, -1.0]}, radius:0.5};
+    let sphere_02 = Sphere{center:Vec3{e:[0.0, -100.5, -1.0]}, radius:100.0};
+
+    let objects = vec!(
+        &sphere_01,
+        &sphere_02);
+
+    let world = hitablelist::HitableList{hit_records: objects};
+
     for j in (0..ny).rev() {
         for i in 0..nx {
             let u = i as f64 / nx as f64;
@@ -57,7 +83,7 @@ fn render_ppm() -> Result<()> {
                                                     horizontal.mul_by_float(u) +
                                                     vertical.mul_by_float(v));
 
-            let col = color(&r);
+            let col = color(&r, &world);
 
             let ir = (255.99 * col.e[0]) as i64;
             let ig = (255.99 * col.e[1]) as i64;

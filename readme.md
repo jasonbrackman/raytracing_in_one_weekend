@@ -16,3 +16,7 @@ Step 3: Render a Sphere
 Step 4: Surface Normals
 
 <img src="ppm_surface_normals.png" width="420" height="224" />
+
+Step 5: Adding Multiple 'Hitables' to the 'world'
+
+<img src="ppm_multiple_spheres.png" width="420" height="224" />
