@@ -47,7 +47,7 @@ fn random_in_unit_sphere() -> Vec3 {
 fn color(r: &Ray, world: &HitableList) -> Vec3 {
     let maxfloat = 10.0 * 100000000000.0;
     let rec = &mut HitRecord::new();
-    if world.hit(r, 0.0, maxfloat, rec) {
+    if world.hit(r, 0.001, maxfloat, rec) {
         let target = rec.p + rec.normal + random_in_unit_sphere();
 
         let temp_r = Ray::new(rec.p, target-rec.p);
