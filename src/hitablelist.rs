@@ -33,6 +33,8 @@ impl <'a> Hitable for HitableList<'a> {
                 rec.t = temp_rec.t;
                 rec.p = temp_rec.p;
                 rec.normal = temp_rec.normal;
+                rec.material = item.material;
+
             }
         }
 

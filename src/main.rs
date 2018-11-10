@@ -70,17 +70,9 @@ fn render_ppm() -> Result<()> {
 
     write!(buffer, "P3\n{} {}\n255\n", nx, ny);
 
-    let sphere_01 = Sphere{
-        center:Vec3{e:[0.0, 0.0, -1.0]},
-        radius:0.5,
-        material: Lambertian{albedo:{Vec3{e:[0.8, 0.3, 0.3]}}}};
-
+    let sphere_01 = Sphere{center:Vec3{e:[0.0, 0.0, -1.0]}, radius:0.5, material: Lambertian{albedo:{Vec3{e:[0.8, 0.3, 0.3]}}}};
     let sphere_02 = Sphere{center:Vec3{e:[0.0, -100.5, -1.0]}, radius:100.0, material: Lambertian{albedo:{Vec3{e:[0.8, 0.8, 0.0]}}}};
-
-
-    let objects = vec!(
-        &sphere_01,
-        &sphere_02);
+    let objects = vec!(&sphere_01, &sphere_02);
 
     let world = hitablelist::HitableList{hit_records: objects};
     let cam = &camera::Camera::new();
@@ -92,16 +84,16 @@ fn render_ppm() -> Result<()> {
                 let u = (i as f64 + random::<f64>()) / nx as f64;
                 let v = (j as f64 + random::<f64>()) / ny as f64;
                 let r = cam.get_ray(u, v);
-                let _p = r.point_at_parameter(2.0);
+                let p = r.point_at_parameter(2.0);
                 col = col + color(&r, &world, 0);
             }
 
             col = col / (ns as f64);
-            col = Vec3{e:[col.r().sqrt(), col.g().sqrt(), col.b().sqrt()]};
+            col = Vec3{e: [col.r().sqrt(), col.g().sqrt(), col.b().sqrt()]} ;
 
-            let ir = (255.99 * col.e[0]) as i64;
-            let ig = (255.99 * col.e[1]) as i64;
-            let ib = (255.99 * col.e[2]) as i64;
+            let ir = (255.99 * col.r()) as i64;
+            let ig = (255.99 * col.g()) as i64;
+            let ib = (255.99 * col.b()) as i64;
 
             write!(buffer, "{} {} {}\n", ir, ig, ib);
         }

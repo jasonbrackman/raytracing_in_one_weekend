@@ -32,3 +32,7 @@ Step 7: Diffuse Materials (uncorrected/gamma corrected)
 Removed 'Shadow Acne':
 
 <img src="renders/ppm_diffuse_corrected_acne_free.png" width="420" height="224" />
+
+Step 8: Adding a Lambert Material (But looking flat -- obviously wrong...)
+
+<img src="renders/ppm_mat_lambert.png" width="420" height="224" />
