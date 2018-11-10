@@ -2,6 +2,7 @@ use ray::Ray;
 use hitable::{Hitable, HitRecord};
 use sphere::Sphere;
 use vec3::Vec3;
+use material;
 
 pub struct HitableList<'a> {
     pub hit_records: Vec<&'a Sphere>
@@ -20,8 +21,9 @@ impl <'a> Hitable for HitableList<'a> {
 
         let mut temp_rec = HitRecord{
             t:0.0,
-            p: Vec3{e:[0.0,0.0,0.0]},
-            normal:Vec3{e:[0.0, 0.0, 0.0]}
+            p: Vec3::new(),
+            normal:Vec3::new(),
+            material: material::Lambertian{albedo:Vec3::new()}
         };
         for &item in self.hit_records.iter() {
 
@@ -31,6 +33,8 @@ impl <'a> Hitable for HitableList<'a> {
                 rec.t = temp_rec.t;
                 rec.p = temp_rec.p;
                 rec.normal = temp_rec.normal;
+                rec.material = item.material;
+
             }
         }
 

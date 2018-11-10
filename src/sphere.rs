@@ -1,11 +1,15 @@
+use rand::random;
+
 use ray::Ray;
 use vec3::{Vec3, dot};
 use hitable::{Hitable, HitRecord};
+use material::Lambertian;
 
 #[derive(Debug)]
 pub struct Sphere {
     pub center: Vec3,
-    pub radius: f64
+    pub radius: f64,
+    pub material: Lambertian
 }
 
 impl Hitable for Sphere {
@@ -21,7 +25,7 @@ impl Hitable for Sphere {
             if temp < t_max && temp  > t_min {
                 rec.t = temp;
                 rec.p = r.point_at_parameter(rec.t);
-                rec.normal = (rec.p - self.center).div_by_float(self.radius);
+                rec.normal = (rec.p - self.center) / self.radius;
 
                 return true;
             }
@@ -29,7 +33,7 @@ impl Hitable for Sphere {
             if temp < t_max && temp > t_min {
                 rec.t = temp;
                 rec.p = r.point_at_parameter(rec.t);
-                rec.normal = (rec.p - self.center).div_by_float(self.radius);
+                rec.normal = (rec.p - self.center) / self.radius;
 
                 return true;
             }
@@ -38,4 +42,13 @@ impl Hitable for Sphere {
         false
 
     }
+}
+
+pub fn random_in_unit_sphere() -> Vec3 {
+    let mut p = Vec3::new();
+    while p.squared_length() > 1.0 {
+        p = Vec3{e:[random::<f64>(), random::<f64>(), random::<f64>()]} * 2.0 - Vec3{e:[1.0, 1.0, 1.0]};
+    };
+
+    p
 }
