@@ -45,7 +45,7 @@ impl Hitable for Sphere {
 }
 
 pub fn random_in_unit_sphere() -> Vec3 {
-    let mut p = Vec3::new();
+    let mut p = Vec3{e:[5.0, 4.0, 3.0]};
     while p.squared_length() > 1.0 {
         p = Vec3{e:[random::<f64>(), random::<f64>(), random::<f64>()]} * 2.0 - Vec3{e:[1.0, 1.0, 1.0]};
     };

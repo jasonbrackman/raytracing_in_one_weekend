@@ -8,8 +8,7 @@ pub trait Material {
     fn scatter(&self, r_in: &Ray, rec: &HitRecord, attenuation: &mut Vec3, scattered: &mut Ray) -> bool;
 }
 
-#[derive(Copy,Clone)]
-#[derive(Debug)]
+#[derive(Copy,Clone, Debug)]
 pub struct Lambertian {
     pub albedo: Vec3
 }
@@ -24,7 +23,7 @@ impl Material for Lambertian {
     }
 }
 
-#[derive(Copy,Clone)]
+#[derive(Copy,Clone, Debug)]
 pub struct Metal {
     pub albedo:Vec3
 }
@@ -43,8 +42,6 @@ impl Material for Metal {
         *scattered = Ray::new(rec.p, reflected);
         *attenuation = self.albedo;
 
-        let result = dot(scattered.direction(), &rec.normal) > 0.0;
-
-        result
+        dot(scattered.direction(), &rec.normal) > 0.0
     }
 }

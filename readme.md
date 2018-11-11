@@ -53,6 +53,6 @@ Removed 'Shadow Acne':
 
 <img src="renders/ppm_diffuse_corrected_acne_free.png" width="420" height="224" />
 
-Step 8: Adding a Lambert Material (But looking flat -- obviously wrong...)
+Step 8: Adding a Lambert Material
 
-<img src="renders/ppm_mat_lambert.png" width="420" height="224" />
+<img src="renders/ppm_mat_lambert_scatter_corrected.png" width="420" height="224" />
