@@ -85,13 +85,13 @@ fn render_ppm() -> Result<()> {
     let sphere_03 = Sphere{
         center:Vec3{e:[1.0, 0.0, -1.0]},
         radius:0.5,
-        material: Box::new(Metal{albedo:{Vec3{e:[0.8, 0.6, 0.2]}}})
+        material: Box::new(Metal::new(0.8, 0.6, 0.2, 0.1))
     };
 
     let sphere_04 = Sphere{
         center:Vec3{e:[-1.0, 0.0, -1.0]},
         radius:0.5,
-        material: Box::new(Metal{albedo:{Vec3{e:[0.8, 0.8, 0.8]}}})
+        material: Box::new(Metal::new(0.8, 0.8, 0.8, 1.0))
     };
 
 
