@@ -4,8 +4,32 @@ use sphere;
 use hitable::HitRecord;
 
 
-pub trait Material {
+pub trait Material: MaterialClone {
     fn scatter(&self, r_in: &Ray, rec: &HitRecord, attenuation: &mut Vec3, scattered: &mut Ray) -> bool;
+}
+
+
+// this is coming from the examples provided here:
+// https://stackoverflow.com/questions/30353462/how-to-clone-a-struct-storing-a-boxed-trait-object
+// -- without this I had no way to of properly assigning the hitrecord's material to the ray object
+// -- as it was always already in a borrowed state and couldn't be moved again.  So I needed a way
+// -- to copy/clone the material.
+pub trait MaterialClone {
+    fn clone_box(&self) -> Box<Material>;
+}
+impl<T> MaterialClone for T
+where
+    T: 'static + Material + Clone,
+{
+    fn clone_box(&self) -> Box<Material> {
+        Box::new(self.clone())
+    }
+}
+
+impl Clone for Box<Material> {
+    fn clone(&self) -> Box<Material> {
+        self.clone_box()
+    }
 }
 
 #[derive(Copy,Clone, Debug)]
@@ -14,7 +38,7 @@ pub struct Lambertian {
 }
 
 impl Material for Lambertian {
-    fn scatter(&self, r_in: &Ray, rec: &HitRecord, attenuation: &mut Vec3, scattered: &mut Ray) -> bool {
+    fn scatter(&self, _r_in: &Ray, rec: &HitRecord, attenuation: &mut Vec3, scattered: &mut Ray) -> bool {
         let target = rec.p + rec.normal + sphere::random_in_unit_sphere();
         *scattered = Ray::new(rec.p, target-rec.p);
         *attenuation = self.albedo;
@@ -29,9 +53,10 @@ pub struct Metal {
 }
 
 impl Metal {
-   fn reflect(v: &Vec3, n: &Vec3) -> Vec3 {
+
+    fn reflect(v: &Vec3, n: &Vec3) -> Vec3 {
         *v - *n * (2.0 * dot(v, n))
-   }
+    }
 }
 
 

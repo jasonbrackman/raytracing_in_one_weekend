@@ -3,13 +3,13 @@ use rand::random;
 use ray::Ray;
 use vec3::{Vec3, dot};
 use hitable::{Hitable, HitRecord};
-use material::Lambertian;
+use material::{Material};
 
-#[derive(Debug)]
+//#[derive(Debug)]
 pub struct Sphere {
     pub center: Vec3,
     pub radius: f64,
-    pub material: Lambertian
+    pub material: Box<dyn Material>
 }
 
 impl Hitable for Sphere {

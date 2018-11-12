@@ -19,6 +19,9 @@ except for the fact that there is no breakpoints or way to profile (that I could
 - I've had one work colleague take a look at the work and did note that it looked very C like in structure instead of 
 Rust like -- This is due to the handholding of the tutorial, and I'm hoping to to revisit and better understand where 
 I'm writing non-Rust like code :).   This is really about me not asking for outside reviews enough... so will fix that.
+- Some additional resources that were helpful:
+--> https://joshleeb.com/posts/rust-traits-and-trait-objects/
+--> https://stackoverflow.com/questions/30353462/how-to-clone-a-struct-storing-a-boxed-trait-object
 
 
 Step 1: Create a PPM file
@@ -53,6 +56,6 @@ Removed 'Shadow Acne':
 
 <img src="renders/ppm_diffuse_corrected_acne_free.png" width="420" height="224" />
 
-Step 8: Adding a Lambert Material
+Step 8: Adding a Lambert Material then Metal
 
-<img src="renders/ppm_mat_lambert_scatter_corrected.png" width="420" height="224" />
+<img src="renders/ppm_mat_lambert_scatter_corrected.png" width="420" height="224" /><img src="renders/ppm_mat_lambert_and_metal.png" width="420" height="224" />

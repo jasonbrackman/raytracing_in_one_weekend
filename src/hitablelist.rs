@@ -4,7 +4,7 @@ use sphere::Sphere;
 use vec3::Vec3;
 use material;
 
-pub struct HitableList<'a> {
+pub struct HitableList <'a>{
     pub hit_records: Vec<&'a Sphere>
 }
 
@@ -14,7 +14,7 @@ pub struct HitableList<'a> {
 ////    }
 //}
 
-impl <'a> Hitable for HitableList<'a> {
+impl <'a> Hitable for HitableList <'a> {
     fn hit(&self, r: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {
         let mut hit_anything = false;
         let mut closest_so_far = t_max;
@@ -23,9 +23,10 @@ impl <'a> Hitable for HitableList<'a> {
             t:0.0,
             p: Vec3::new(),
             normal:Vec3::new(),
-            material: material::Lambertian{albedo:Vec3::new()}
+            material: Box::new(material::Lambertian{albedo:Vec3::new()})
         };
-        for &item in self.hit_records.iter() {
+
+        for item in self.hit_records.iter() {
 
             if item.hit(r, t_min, closest_so_far, &mut temp_rec) {
                 hit_anything = true;
@@ -33,9 +34,12 @@ impl <'a> Hitable for HitableList<'a> {
                 rec.t = temp_rec.t;
                 rec.p = temp_rec.p;
                 rec.normal = temp_rec.normal;
-                rec.material = item.material;
+                //println!("{:?}", item.material);
+                rec.material = item.material.clone();   //<-- this is the problem. :(
+                //                                 -- Cannot move out of borrowed content
 
             }
+
         }
 
         hit_anything
