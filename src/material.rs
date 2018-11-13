@@ -126,13 +126,15 @@ impl Dielectric {
 impl Material for Dielectric {
     fn scatter(&self, r_in: &Ray, rec: &HitRecord, attenuation: &mut Vec3, scattered: &mut Ray) -> bool {
         // setup some temp vars
-        let mut outward_normal = Vec3::new();
+        let outward_normal;
         let reflected = Dielectric::reflect(r_in.direction(), &rec.normal);
-        let mut ni_over_nt = 0.0;
+        let ni_over_nt;
+
         *attenuation = Vec3{e:[1.0, 1.0, 1.0]};
+
         let refracted = &mut Vec3::new();
-        let mut reflect_probability;
-        let mut cosine;
+        let reflect_probability;
+        let cosine;
 
         if dot(r_in.direction(), &rec.normal) > 0.0 {
             outward_normal = rec.normal * -1.0;

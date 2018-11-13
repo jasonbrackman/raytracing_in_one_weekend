@@ -107,7 +107,13 @@ fn render_ppm() -> Result<()> {
     let objects = vec!(&sphere_01, &sphere_02, &sphere_03, &sphere_04, &sphere_05);
 
     let world = hitablelist::HitableList{hit_records: objects};
-    let cam = &camera::Camera::new();
+    let cam = &camera::Camera::new(
+                                   Vec3{e:[-2.0, 2.0, 1.0]},
+                                   Vec3{e:[0.0, 0.0, -1.0]},
+                                   Vec3{e:[0.0, 1.0, 0.0]},
+                                   20.0,
+                                   nx as f64 / ny as f64
+    );
 
     for j in (0..ny).rev() {
         for i in 0..nx {

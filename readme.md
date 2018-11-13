@@ -60,3 +60,7 @@ Step 8/9: Adding a Lambert, Metal (with then without fuzz parameter), and Dielec
 
 <img src="renders/ppm_mat_lambert_scatter_corrected.png" width="420" height="224" /><img src="renders/ppm_mat_lambert_and_metal.png" width="420" height="224" />
 <img src="renders/ppm_adding_metal_fuzz.png" width="420" height="224" /><img src="renders/ppm_mat_dielectric.png" width="420" height="224" />
+
+Step 10: Updated the camera controls
+
+<img src="renders/ppm_camera_v2.png" width="420" height="224" />
