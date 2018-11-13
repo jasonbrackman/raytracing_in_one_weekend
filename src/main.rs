@@ -21,7 +21,7 @@ use sphere::Sphere;
 
 mod camera;
 mod material;
-use material::{Lambertian, Metal};
+use material::{Lambertian, Metal, Dielectric};
 
 
 //fn hit_sphere(center: Vec3, radius:f64, r:&Ray) -> f64 {
@@ -42,7 +42,7 @@ fn color(r: &Ray, world: &HitableList, depth: i32) -> Vec3 {
     let maxfloat = 10.0 * 100000000000.0;
     let rec = &mut HitRecord::new();
 
-    if world.hit(r, 0.001, maxfloat, rec) {
+    if world.hit(r, 0.002, maxfloat, rec) {
         // setup up temp vars
         let mut scattered = Ray::new(Vec3::new(), Vec3::new());
         let mut attenuation = Vec3::new();
@@ -91,11 +91,17 @@ fn render_ppm() -> Result<()> {
     let sphere_04 = Sphere{
         center:Vec3{e:[-1.0, 0.0, -1.0]},
         radius:0.5,
-        material: Box::new(Metal::new(0.8, 0.8, 0.8, 1.0))
+        material: Box::new(Dielectric::new(1.5))
+    };
+
+    let sphere_05 = Sphere{
+        center:Vec3{e:[-1.0, 0.0, -1.0]},
+        radius:-0.45,
+        material: Box::new(Dielectric::new(1.5))
     };
 
 
-    let objects = vec!(&sphere_01, &sphere_02, &sphere_03, &sphere_04);
+    let objects = vec!(&sphere_01, &sphere_02, &sphere_03, &sphere_04, &sphere_05);
 
     let world = hitablelist::HitableList{hit_records: objects};
     let cam = &camera::Camera::new();

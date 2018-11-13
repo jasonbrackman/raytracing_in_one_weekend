@@ -2,6 +2,7 @@ use vec3::{Vec3, unit_vector, dot};
 use ray::Ray;
 use sphere;
 use hitable::HitRecord;
+use rand::{random};
 
 
 pub trait Material: MaterialClone {
@@ -67,7 +68,6 @@ impl Metal {
     }
 }
 
-
 impl Material for Metal {
 
     fn scatter(&self, r_in: &Ray, rec: &HitRecord, attenuation: &mut Vec3, scattered: &mut Ray) -> bool {
@@ -76,5 +76,81 @@ impl Material for Metal {
         *attenuation = self.albedo;
 
         dot(scattered.direction(), &rec.normal) > 0.0
+    }
+}
+
+#[derive(Copy,Clone, Debug)]
+pub struct Dielectric {
+    pub refraction_index: f64,
+
+}
+
+impl Dielectric {
+    pub fn new(refraction_index: f64) -> Dielectric {
+        Dielectric{refraction_index}
+    }
+
+    fn reflect(v: &Vec3, n: &Vec3) -> Vec3 {
+        *v - *n * (2.0 * dot(v, n))
+    }
+
+    fn refract(v: &Vec3, n: &Vec3, ni_over_nt: f64, refracted: &mut Vec3) -> bool {
+        let uv = unit_vector(*v);
+        let dt = dot(&uv, n);
+        let discriminant = 1.0 - ni_over_nt * ni_over_nt * (1.0 - dt * dt);
+        match discriminant > 0.0 {
+            true => {
+                *refracted = (uv - *n * dt) * ni_over_nt - *n * discriminant.sqrt();
+                true
+            }
+            false => {
+
+                false
+            }
+        }
+    }
+
+    fn schlick(cosine: f64, refraction_index: f64) -> f64 {
+        let mut r0 = (1.0 - refraction_index) / (1.0 + refraction_index);
+        r0 = r0 * r0;
+        r0 + (1.0-r0) * (1.0-cosine).powf(5.0)
+    }
+}
+
+impl Material for Dielectric {
+    fn scatter(&self, r_in: &Ray, rec: &HitRecord, attenuation: &mut Vec3, scattered: &mut Ray) -> bool {
+        // setup some temp vars
+        let mut outward_normal = Vec3::new();
+        let reflected = Dielectric::reflect(r_in.direction(), &rec.normal);
+        let mut ni_over_nt = 0.0;
+        *attenuation = Vec3{e:[1.0, 1.0, 1.0]};
+        let refracted = &mut Vec3::new();
+        let mut reflect_probability = 0.0;
+        let mut cosine = 0.0;
+
+        if dot(r_in.direction(), &rec.normal) > 0.0 {
+            outward_normal = rec.normal * -1.0;
+            ni_over_nt = self.refraction_index;
+            cosine = self.refraction_index * dot(r_in.direction(), &rec.normal) / (r_in.direction().length());
+        } else {
+            outward_normal = rec.normal;
+            ni_over_nt = 1.0 / self.refraction_index;
+            cosine =  dot(r_in.direction(), &rec.normal) * -1.0 / (r_in.direction().length());
+        }
+
+        if Dielectric::refract(r_in.direction(), &outward_normal, ni_over_nt, refracted) {
+            reflect_probability = Dielectric::schlick(cosine, self.refraction_index);
+            //println!("Yes.");
+        } else {
+            reflect_probability = 1.0;
+        }
+
+        if random::<f64>() < reflect_probability {
+            *scattered = Ray::new(rec.p, reflected.clone());
+        } else {
+            *scattered = Ray::new(rec.p, refracted.clone());
+        }
+
+        return true;
     }
 }
