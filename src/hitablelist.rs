@@ -5,7 +5,7 @@ use vec3::Vec3;
 use material;
 
 pub struct HitableList <'a>{
-    pub hit_records: Vec<&'a Sphere>
+    pub hit_records: &'a Vec<Sphere>
 }
 
 //impl <'a> HitableList<'a> {

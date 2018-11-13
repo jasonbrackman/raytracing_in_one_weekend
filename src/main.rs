@@ -59,18 +59,8 @@ fn color(r: &Ray, world: &HitableList, depth: i32) -> Vec3 {
     }
 }
 
-fn render_ppm() -> Result<()> {
-
-    let mut buffer = File::create("helloworld.ppm")?;
-
-
-    let nx = 200;
-    let ny = 100;
-    let ns = 100;
-
-    write!(buffer, "P3\n{} {}\n255\n", nx, ny);
-
-    let sphere_01 = Sphere{
+fn get_spheres()  -> Vec<Sphere> {
+   let sphere_01 = Sphere{
         center:Vec3{e:[0.0, 0.0, -1.0]},
         radius:0.5,
         material: Box::new(Lambertian::new(0.1, 0.2, 0.8))
@@ -91,10 +81,9 @@ fn render_ppm() -> Result<()> {
     let sphere_04 = Sphere{
         center:Vec3{e:[-1.0, 0.0, -1.0]},
         radius:0.5,
-        material: Box::new(Dielectric::new(1.5))    // typically
-        //                                                               air = 1,
-        //                                                               glass = 1.3-1.7,
-        //                                                               diamond = 2.4
+        material: Box::new(Dielectric::new(1.5))  // air = 1,
+                                                                   // glass = 1.3-1.7,
+                                                                   // diamond = 2.4
     };
 
     let sphere_05 = Sphere{
@@ -103,15 +92,87 @@ fn render_ppm() -> Result<()> {
         material: Box::new(Dielectric::new(1.5))
     };
 
+    vec!(sphere_01, sphere_02, sphere_03, sphere_04, sphere_05)
+}
 
-    let objects = vec!(&sphere_01, &sphere_02, &sphere_03, &sphere_04, &sphere_05);
+fn random_scene() -> Vec<Sphere> {
+    let n = 500;
 
-    let world = hitablelist::HitableList{hit_records: objects};
+    let mut scene = vec!();
+
+    scene.push(Sphere{
+        center:Vec3{e:[0.0, -1000.0, 1000.0]},
+        radius:-0.45,
+        material: Box::new(Lambertian::new(0.5, 0.5, 0.5))
+    });
+
+
+    for a in -11..11 {
+        for b in -11..11 {
+            let choose_mat = random::<f64>();
+            let center = Vec3{e:[a as f64 + 0.9 + random::<f64>(), 0.2, b as f64 + 0.9 + random::<f64>()]};
+            if (center - Vec3 { e: [4.0, 0.2, 0.0] }).length() > 0.9 {
+                match choose_mat {
+                    // diffuse
+                    0.0...0.8 => scene.push(
+                        Sphere {
+                            center,
+                            radius: 0.2,
+                            material: Box::new(Lambertian::new(random::<f64>() * random::<f64>(), random::<f64>() * random::<f64>(), random::<f64>() * random::<f64>()))
+                        }),
+
+                    // metal
+                    0.80001...0.95 => scene.push(Sphere {
+                        center,
+                        radius: 0.2,
+                        material: Box::new(Metal::new(0.5 * (1.0 + random::<f64>()), 0.5 * (1.0 + random::<f64>()), 0.5 * (1.0 + random::<f64>()), 0.5 * random::<f64>()))
+                    }),
+
+                    // glass
+                    _ => scene.push(Sphere { center, radius: 0.2, material: Box::new(Dielectric::new(1.5))})
+                };
+            } else {};
+        }
+    }
+
+    scene.push(Sphere{
+        center:Vec3{e:[0.0, 1.0, 0.0]},
+        radius:1.0,
+        material: Box::new(Dielectric::new(1.5))
+    });
+    scene.push(Sphere{
+        center:Vec3{e:[-4.0, 1.0, 0.0]},
+        radius:1.0,
+        material: Box::new(Lambertian::new(0.4, 0.2, 0.1))
+    });
+    scene.push(Sphere{
+        center:Vec3{e:[4.0, 1.0, 0.0]},
+        radius:1.0,
+        material: Box::new(Metal::new(0.7, 0.6, 0.5, 0.0))
+    });
+
+    scene
+}
+
+fn render_ppm() -> Result<()> {
+
+    let mut buffer = File::create("helloworld.ppm")?;
+
+
+    let nx = 600;
+    let ny = 300;
+    let ns = 100;
+
+    write!(buffer, "P3\n{} {}\n255\n", nx, ny);
+
+    let objects = random_scene(); //get_spheres();
+
+    let world = hitablelist::HitableList{hit_records: &objects};
     let cam = &camera::Camera::new(
                                    Vec3{e:[-2.0, 2.0, 1.0]},
                                    Vec3{e:[0.0, 0.0, -1.0]},
                                    Vec3{e:[0.0, 1.0, 0.0]},
-                                   20.0,
+                                   42.0,
                                    nx as f64 / ny as f64
     );
 
