@@ -73,25 +73,28 @@ fn render_ppm() -> Result<()> {
     let sphere_01 = Sphere{
         center:Vec3{e:[0.0, 0.0, -1.0]},
         radius:0.5,
-        material: Box::new(Lambertian{albedo:{Vec3{e:[0.8, 0.3, 0.3]}}})
+        material: Box::new(Lambertian::new(0.1, 0.2, 0.8))
     };
 
     let sphere_02 = Sphere{
         center:Vec3{e:[0.0, -100.5, -1.0]},
         radius:100.0,
-        material: Box::new(Lambertian{albedo:{Vec3{e:[0.8, 0.8, 0.0]}}})
+        material: Box::new(Lambertian::new(0.8, 0.8, 0.0))
     };
 
     let sphere_03 = Sphere{
         center:Vec3{e:[1.0, 0.0, -1.0]},
         radius:0.5,
-        material: Box::new(Metal::new(0.8, 0.6, 0.2, 0.1))
+        material: Box::new(Metal::new(0.8, 0.6, 0.2, 0.3))
     };
 
     let sphere_04 = Sphere{
         center:Vec3{e:[-1.0, 0.0, -1.0]},
         radius:0.5,
-        material: Box::new(Dielectric::new(1.5))
+        material: Box::new(Dielectric::new(1.5))    // typically
+        //                                                               air = 1,
+        //                                                               glass = 1.3-1.7,
+        //                                                               diamond = 2.4
     };
 
     let sphere_05 = Sphere{

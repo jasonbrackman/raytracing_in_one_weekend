@@ -38,6 +38,12 @@ pub struct Lambertian {
     pub albedo: Vec3
 }
 
+impl Lambertian {
+    pub fn new(r: f64, g: f64, b: f64) -> Lambertian {
+        Lambertian { albedo: Vec3 { e: [r, g, b] } }
+    }
+}
+
 impl Material for Lambertian {
     fn scatter(&self, _r_in: &Ray, rec: &HitRecord, attenuation: &mut Vec3, scattered: &mut Ray) -> bool {
         let target = rec.p + rec.normal + sphere::random_in_unit_sphere();
@@ -125,8 +131,8 @@ impl Material for Dielectric {
         let mut ni_over_nt = 0.0;
         *attenuation = Vec3{e:[1.0, 1.0, 1.0]};
         let refracted = &mut Vec3::new();
-        let mut reflect_probability = 0.0;
-        let mut cosine = 0.0;
+        let mut reflect_probability;
+        let mut cosine;
 
         if dot(r_in.direction(), &rec.normal) > 0.0 {
             outward_normal = rec.normal * -1.0;

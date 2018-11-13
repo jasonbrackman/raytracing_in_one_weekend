@@ -56,11 +56,7 @@ Removed 'Shadow Acne':
 
 <img src="renders/ppm_diffuse_corrected_acne_free.png" width="420" height="224" />
 
-Step 8: Adding a Lambert Material then Metal (with then without fuzz parameter)
+Step 8/9: Adding a Lambert, Metal (with then without fuzz parameter), and Dielectric Materials
 
 <img src="renders/ppm_mat_lambert_scatter_corrected.png" width="420" height="224" /><img src="renders/ppm_mat_lambert_and_metal.png" width="420" height="224" />
-<img src="renders/ppm_adding_metal_fuzz.png" width="420" height="224" />
-
-Step 9: Dielectric Material added
-
-<img src="renders/ppm_mat_dielectric.png" width="420" height="224" />
+<img src="renders/ppm_adding_metal_fuzz.png" width="420" height="224" /><img src="renders/ppm_mat_dielectric.png" width="420" height="224" />
