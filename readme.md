@@ -68,3 +68,7 @@ Step 10: Updated the camera controls
 Step 11: Added DOF
 
 <img src="renders/ppm_dof.png" width="420" height="224" />
+
+Final Result:
+
+<img src="renders/ppm_final.png" />

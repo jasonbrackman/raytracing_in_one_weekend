@@ -161,7 +161,7 @@ fn render_ppm() -> Result<()> {
 
     let nx = 600;
     let ny = 300;
-    let ns = 200;
+    let ns = 250;
 
     write!(buffer, "P3\n{} {}\n255\n", nx, ny);
 
@@ -169,16 +169,16 @@ fn render_ppm() -> Result<()> {
 
     let world = hitablelist::HitableList{hit_records: &objects};
 
-    let look_from = Vec3{e:[-4.0, 3.0, 2.0]}; // Vec3{e:[-4.0, 2.0, 4.0]},
+    let look_from = Vec3{e:[-8.0, 2.0, 2.0]}; // Vec3{e:[-4.0, 2.0, 4.0]},
     let look_at = Vec3{e:[0.0, 0.0, -1.0]};
     let distance_to_focus = (look_from - look_at).length();
-    let aperture = 0.6;
+    let aperture = 0.22;
 
     let cam = &camera::Camera::new(
                                    look_from,
                                    look_at,
                                    Vec3{e:[0.0, 1.0, 0.0]},
-                                   20.0,
+                                   30.0,
                                    nx as f64 / ny as f64,
                                     aperture,
                                     distance_to_focus
