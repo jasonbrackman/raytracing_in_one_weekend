@@ -64,3 +64,7 @@ Step 8/9: Adding a Lambert, Metal (with then without fuzz parameter), and Dielec
 Step 10: Updated the camera controls
 
 <img src="renders/ppm_camera_v2.png" width="420" height="224" />
+
+Step 11: Added DOF
+
+<img src="renders/ppm_dof.png" width="420" height="224" />
