@@ -8,12 +8,12 @@ use material::{Material};
 //#[derive(Debug)]
 pub struct Sphere {
     pub center: Vec3,
-    pub radius: f64,
+    pub radius: f32,
     pub material: Box<dyn Material>
 }
 
 impl Hitable for Sphere {
-    fn hit(&self, r: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {
+    fn hit(&self, r: &Ray, t_min: f32, t_max: f32, rec: &mut HitRecord) -> bool {
         let oc = *r.origin() - self.center;
         let a = dot(r.direction(), r.direction());
         let b = dot(&oc, r.direction());
@@ -47,7 +47,7 @@ impl Hitable for Sphere {
 pub fn random_in_unit_sphere() -> Vec3 {
     let mut p = Vec3{e:[5.0, 4.0, 3.0]};
     while p.squared_length() > 1.0 {
-        p = Vec3{e:[random::<f64>(), random::<f64>(), random::<f64>()]} * 2.0 - Vec3{e:[1.0, 1.0, 1.0]};
+        p = Vec3{e:[random::<f32>(), random::<f32>(), random::<f32>()]} * 2.0 - Vec3{e:[1.0, 1.0, 1.0]};
     };
 
     p

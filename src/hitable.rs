@@ -5,7 +5,7 @@ use material;
 
 //#[derive(Copy,Clone)]
 pub struct HitRecord {
-    pub t: f64,
+    pub t: f32,
     pub p: Vec3,
     pub normal: Vec3,
     pub material: Box<dyn material::Material>
@@ -17,11 +17,11 @@ impl HitRecord {
             t: 0.0,
             p: Vec3::new(),
             normal: Vec3::new(),
-            material: Box::new(material::Lambertian{albedo: Vec3::new()})
+            material: material::Lambertian::new(0.0, 0.0, 0.0)
         }
     }
 }
 
 pub trait Hitable {
-    fn hit(&self, r: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool;
+    fn hit(&self, r: &Ray, t_min: f32, t_max: f32, rec: &mut HitRecord) -> bool;
 }

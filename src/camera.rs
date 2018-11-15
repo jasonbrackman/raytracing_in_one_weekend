@@ -5,7 +5,7 @@ use rand::random;
 pub fn random_in_unit_disk() -> Vec3 {
     let mut p = Vec3{e:[1.0, 1.0, 1.0]};
     while dot(&p, &p) >= 1.0 {
-        p = Vec3{e:[random::<f64>(), random::<f64>(), 0.0]} * 2.0 - Vec3{e:[1.0, 1.0, 0.0]};
+        p = Vec3{e:[random::<f32>(), random::<f32>(), 0.0]} * 2.0 - Vec3{e:[1.0, 1.0, 0.0]};
     }
     p
 }
@@ -17,11 +17,11 @@ pub struct Camera {
     vertical: Vec3,
     u: Vec3,
     v: Vec3,
-    lens_radius: f64
+    lens_radius: f32
 }
 
 impl Camera {
-    pub fn new(look_from: Vec3, look_at: Vec3, v_up: Vec3, v_fov: f64, aspect: f64, aperture: f64, focus_dist: f64) -> Camera {
+    pub fn new(look_from: Vec3, look_at: Vec3, v_up: Vec3, v_fov: f32, aspect: f32, aperture: f32, focus_dist: f32) -> Camera {
         let lens_radius = aperture / 2.0;
         let theta = v_fov*3.14/180.0;
         let half_height = (theta/2.0).tan();
@@ -39,7 +39,7 @@ impl Camera {
         Camera {origin, lower_left_corner, horizontal, vertical, u, v, lens_radius}
     }
 
-    pub fn get_ray(&self, s: f64, t:f64) -> Ray {
+    pub fn get_ray(&self, s: f32, t:f32) -> Ray {
         let rd = random_in_unit_disk() * self.lens_radius;
         let offset = self.u * rd.x() +  self.v * rd.y();
         Ray::new(self.origin + offset,

@@ -39,7 +39,7 @@ pub struct Lambertian {
 }
 
 impl Lambertian {
-    pub fn new(r: f64, g: f64, b: f64) -> Box<Lambertian> {
+    pub fn new(r: f32, g: f32, b: f32) -> Box<Lambertian> {
         Box::new(Lambertian { albedo: Vec3 { e: [r, g, b] } })
     }
 }
@@ -57,11 +57,11 @@ impl Material for Lambertian {
 #[derive(Copy,Clone, Debug)]
 pub struct Metal {
     pub albedo:Vec3,
-    pub fuzz:f64
+    pub fuzz:f32
 }
 
 impl Metal {
-    pub fn new(r:f64, g:f64, b:f64, fuzz:f64) -> Box<Metal> {
+    pub fn new(r:f32, g:f32, b:f32, fuzz:f32) -> Box<Metal> {
         let fuzziness = match fuzz > 1.0 {
             true => 1.0,
             false => fuzz
@@ -87,12 +87,12 @@ impl Material for Metal {
 
 #[derive(Copy,Clone, Debug)]
 pub struct Dielectric {
-    pub refraction_index: f64,
+    pub refraction_index: f32,
 
 }
 
 impl Dielectric {
-    pub fn new(refraction_index: f64) -> Box<Dielectric> {
+    pub fn new(refraction_index: f32) -> Box<Dielectric> {
 
         Box::new(Dielectric{refraction_index})
     }
@@ -101,7 +101,7 @@ impl Dielectric {
         *v - *n * (2.0 * dot(v, n))
     }
 
-    fn refract(v: &Vec3, n: &Vec3, ni_over_nt: f64, refracted: &mut Vec3) -> bool {
+    fn refract(v: &Vec3, n: &Vec3, ni_over_nt: f32, refracted: &mut Vec3) -> bool {
         let uv = unit_vector(*v);
         let dt = dot(&uv, n);
         let discriminant = 1.0 - ni_over_nt * ni_over_nt * (1.0 - dt * dt);
@@ -117,7 +117,7 @@ impl Dielectric {
         }
     }
 
-    fn schlick(cosine: f64, refraction_index: f64) -> f64 {
+    fn schlick(cosine: f32, refraction_index: f32) -> f32 {
         let mut r0 = (1.0 - refraction_index) / (1.0 + refraction_index);
         r0 = r0 * r0;
         r0 + (1.0-r0) * (1.0-cosine).powf(5.0)
@@ -154,7 +154,7 @@ impl Material for Dielectric {
             reflect_probability = 1.0;
         }
 
-        if random::<f64>() < reflect_probability {
+        if random::<f32>() < reflect_probability {
             *scattered = Ray::new(rec.p, reflected.clone());
         } else {
             *scattered = Ray::new(rec.p, refracted.clone());

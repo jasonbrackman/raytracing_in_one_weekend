@@ -15,7 +15,7 @@ pub struct HitableList <'a>{
 //}
 
 impl <'a> Hitable for HitableList <'a> {
-    fn hit(&self, r: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {
+    fn hit(&self, r: &Ray, t_min: f32, t_max: f32, rec: &mut HitRecord) -> bool {
         let mut hit_anything = false;
         let mut closest_so_far = t_max;
 
@@ -23,24 +23,22 @@ impl <'a> Hitable for HitableList <'a> {
             t:0.0,
             p: Vec3::new(),
             normal:Vec3::new(),
-            material: Box::new(material::Lambertian{albedo:Vec3::new()})
+            material: material::Lambertian::new(1.0, 1.0, 1.0)
         };
 
-        for item in self.hit_records.iter() {
-
+        let mut closest_item = 0;
+        for (index, item) in self.hit_records.iter().enumerate() {
             if item.hit(r, t_min, closest_so_far, &mut temp_rec) {
                 hit_anything = true;
                 closest_so_far = temp_rec.t;
-                rec.t = temp_rec.t;
-                rec.p = temp_rec.p;
-                rec.normal = temp_rec.normal;
-                //println!("{:?}", item.material);
-                rec.material = item.material.clone();   //<-- this is the problem. :(
-                //                                 -- Cannot move out of borrowed content
-
+                closest_item = index;
             }
-
         }
+
+        rec.t = temp_rec.t;
+        rec.p = temp_rec.p;
+        rec.normal = temp_rec.normal;
+        rec.material = self.hit_records[closest_item].material.clone();
 
         hit_anything
     }
