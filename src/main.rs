@@ -63,47 +63,46 @@ fn get_spheres()  -> Vec<Sphere> {
    let sphere_01 = Sphere{
         center:Vec3{e:[0.0, 0.0, -1.0]},
         radius:0.5,
-        material: Box::new(Lambertian::new(0.1, 0.2, 0.8))
+        material: Lambertian::new(0.1, 0.2, 0.8)
     };
 
     let sphere_02 = Sphere{
         center:Vec3{e:[0.0, -100.5, -1.0]},
         radius:100.0,
-        material: Box::new(Lambertian::new(0.8, 0.8, 0.0))
+        material: Lambertian::new(0.8, 0.8, 0.0)
     };
 
     let sphere_03 = Sphere{
         center:Vec3{e:[1.0, 0.0, -1.0]},
         radius:0.5,
-        material: Box::new(Metal::new(0.8, 0.6, 0.2, 0.3))
+        material: Metal::new(0.8, 0.6, 0.2, 0.3)
     };
 
     let sphere_04 = Sphere{
         center:Vec3{e:[-1.0, 0.0, -1.0]},
         radius:0.5,
-        material: Box::new(Dielectric::new(1.5))  // air = 1,
-                                                                   // glass = 1.3-1.7,
-                                                                   // diamond = 2.4
+        material: Dielectric::new(1.5)    // air = 1,
+                                                        // glass = 1.3-1.7,
+                                                        // diamond = 2.4
     };
 
     let sphere_05 = Sphere{
         center:Vec3{e:[-1.0, 0.0, -1.0]},
         radius:-0.45,
-        material: Box::new(Dielectric::new(1.5))
+        material: Dielectric::new(1.5)
     };
 
     vec!(sphere_01, sphere_02, sphere_03, sphere_04, sphere_05)
 }
 
 fn random_scene() -> Vec<Sphere> {
-    let n = 500;
 
     let mut scene = vec!();
 
     scene.push(Sphere{
         center:Vec3{e:[0.0, -1000.0, 0.0]},
         radius:1000.0,
-        material: Box::new(Lambertian::new(0.5, 0.5, 0.5))
+        material: Lambertian::new(0.5, 0.5, 0.5)
     });
 
 
@@ -112,43 +111,43 @@ fn random_scene() -> Vec<Sphere> {
             let choose_mat = random::<f64>();
             let center = Vec3{e:[a as f64 + 0.9 + random::<f64>(), 0.2, b as f64 + 0.9 + random::<f64>()]};
             if (center - Vec3 { e: [4.0, 0.2, 0.0] }).length() > 0.9 {
-                match choose_mat {
-                    // diffuse
-                    0.0...0.8 => scene.push(
+                if choose_mat < 0.8 {
+                    //
+                    scene.push(
                         Sphere {
                             center,
                             radius: 0.2,
-                            material: Box::new(Lambertian::new(random::<f64>() * random::<f64>(), random::<f64>() * random::<f64>(), random::<f64>() * random::<f64>()))
-                        }),
-
-                    // metal
-                    0.80001...0.95 => scene.push(Sphere {
+                            material: Lambertian::new(random::<f64>() * random::<f64>(), random::<f64>() * random::<f64>(), random::<f64>() * random::<f64>())
+                        })
+                } else if choose_mat > 0.8 && choose_mat < 0.95 {
+                    //
+                    scene.push(Sphere {
                         center,
                         radius: 0.2,
-                        material: Box::new(Metal::new(0.5 * (1.0 + random::<f64>()), 0.5 * (1.0 + random::<f64>()), 0.5 * (1.0 + random::<f64>()), 0.5 * random::<f64>()))
-                    }),
-
+                        material: Metal::new(0.5 * (1.0 + random::<f64>()), 0.5 * (1.0 + random::<f64>()), 0.5 * (1.0 + random::<f64>()), 0.5 * random::<f64>())
+                    });
+                } else {
                     // glass
-                    _ => scene.push(Sphere { center, radius: 0.2, material: Box::new(Dielectric::new(1.5))})
+                    scene.push(Sphere { center, radius: 0.2, material: Dielectric::new(1.5)})
                 };
-            } else {};
+            }
         }
     }
 
     scene.push(Sphere{
         center:Vec3{e:[0.0, 1.0, 0.0]},
         radius:1.0,
-        material: Box::new(Dielectric::new(1.5))
+        material: Dielectric::new(1.5)
     });
     scene.push(Sphere{
         center:Vec3{e:[-4.0, 1.0, 0.0]},
         radius:1.0,
-        material: Box::new(Lambertian::new(0.4, 0.2, 0.1))
+        material: Lambertian::new(0.4, 0.2, 0.1)
     });
     scene.push(Sphere{
         center:Vec3{e:[4.0, 1.0, 0.0]},
         radius:1.0,
-        material: Box::new(Metal::new(0.7, 0.6, 0.5, 0.0))
+        material: Metal::new(0.7, 0.6, 0.5, 0.0)
     });
 
     scene
@@ -161,7 +160,7 @@ fn render_ppm() -> Result<()> {
 
     let nx = 600;
     let ny = 300;
-    let ns = 250;
+    let ns = 1;
 
     write!(buffer, "P3\n{} {}\n255\n", nx, ny);
 

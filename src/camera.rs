@@ -17,7 +17,6 @@ pub struct Camera {
     vertical: Vec3,
     u: Vec3,
     v: Vec3,
-    w: Vec3,
     lens_radius: f64
 }
 
@@ -37,7 +36,7 @@ impl Camera {
         let horizontal = u * half_width * focus_dist * 2.0;
         let vertical = v * half_height * focus_dist * 2.0;
 
-        Camera {origin, lower_left_corner, horizontal, vertical, u, v, w, lens_radius}
+        Camera {origin, lower_left_corner, horizontal, vertical, u, v, lens_radius}
     }
 
     pub fn get_ray(&self, s: f64, t:f64) -> Ray {

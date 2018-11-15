@@ -39,8 +39,8 @@ pub struct Lambertian {
 }
 
 impl Lambertian {
-    pub fn new(r: f64, g: f64, b: f64) -> Lambertian {
-        Lambertian { albedo: Vec3 { e: [r, g, b] } }
+    pub fn new(r: f64, g: f64, b: f64) -> Box<Lambertian> {
+        Box::new(Lambertian { albedo: Vec3 { e: [r, g, b] } })
     }
 }
 
@@ -61,13 +61,13 @@ pub struct Metal {
 }
 
 impl Metal {
-    pub fn new(r:f64, g:f64, b:f64, fuzz:f64) -> Metal {
+    pub fn new(r:f64, g:f64, b:f64, fuzz:f64) -> Box<Metal> {
         let fuzziness = match fuzz > 1.0 {
             true => 1.0,
             false => fuzz
         };
 
-        Metal{albedo: Vec3{e: [r, g, b]}, fuzz: fuzziness}
+        Box::new(Metal{albedo: Vec3{e: [r, g, b]}, fuzz: fuzziness})
     }
     fn reflect(v: &Vec3, n: &Vec3) -> Vec3 {
         *v - *n * (2.0 * dot(v, n))
@@ -92,8 +92,9 @@ pub struct Dielectric {
 }
 
 impl Dielectric {
-    pub fn new(refraction_index: f64) -> Dielectric {
-        Dielectric{refraction_index}
+    pub fn new(refraction_index: f64) -> Box<Dielectric> {
+
+        Box::new(Dielectric{refraction_index})
     }
 
     fn reflect(v: &Vec3, n: &Vec3) -> Vec3 {
