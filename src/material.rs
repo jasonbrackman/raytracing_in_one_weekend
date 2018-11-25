@@ -62,10 +62,7 @@ pub struct Metal {
 
 impl Metal {
     pub fn new(r:f32, g:f32, b:f32, fuzz:f32) -> Box<Metal> {
-        let fuzziness = match fuzz > 1.0 {
-            true => 1.0,
-            false => fuzz
-        };
+        let fuzziness = if fuzz > 1.0 { 1.0 } else { fuzz };
 
         Box::new(Metal{albedo: Vec3{e: [r, g, b]}, fuzz: fuzziness})
     }
@@ -105,15 +102,11 @@ impl Dielectric {
         let uv = unit_vector(*v);
         let dt = dot(&uv, n);
         let discriminant = 1.0 - ni_over_nt * ni_over_nt * (1.0 - dt * dt);
-        match discriminant > 0.0 {
-            true => {
-                *refracted = (uv - *n * dt) * ni_over_nt - *n * discriminant.sqrt();
-                true
-            }
-            false => {
-
-                false
-            }
+        if discriminant > 0.0 {
+            *refracted = (uv - *n * dt) * ni_over_nt - *n * discriminant.sqrt();
+            true
+        } else {
+            false
         }
     }
 
@@ -135,17 +128,18 @@ impl Material for Dielectric {
 
         let refracted = &mut Vec3::new();
         let reflect_probability;
-        let cosine;
-
-        if dot(r_in.direction(), &rec.normal) > 0.0 {
+        let cosine= if dot(r_in.direction(), &rec.normal) > 0.0 {
             outward_normal = rec.normal * -1.0;
             ni_over_nt = self.refraction_index;
-            cosine = self.refraction_index * dot(r_in.direction(), &rec.normal) / (r_in.direction().length());
+
+            self.refraction_index * dot(r_in.direction(), &rec.normal) / (r_in.direction().length())
+
         } else {
             outward_normal = rec.normal;
             ni_over_nt = 1.0 / self.refraction_index;
-            cosine =  dot(r_in.direction(), &rec.normal) * -1.0 / (r_in.direction().length());
-        }
+
+            dot(r_in.direction(), &rec.normal) * -1.0 / (r_in.direction().length())
+        };
 
         if Dielectric::refract(r_in.direction(), &outward_normal, ni_over_nt, refracted) {
             reflect_probability = Dielectric::schlick(cosine, self.refraction_index);
@@ -160,6 +154,6 @@ impl Material for Dielectric {
             *scattered = Ray::new(rec.p, refracted.clone());
         }
 
-        return true;
+        true
     }
 }

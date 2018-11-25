@@ -27,10 +27,10 @@ use material::{Lambertian, Metal, Dielectric};
 
 
 fn color(r: &Ray, world: &HitableList, depth: i32) -> Vec3 {
-    let maxfloat = 10.0 * 10.0;
+    let max_float = 100_000_000_000.00;
     let rec = &mut HitRecord::new();
 
-    if world.hit(r, 0.001, maxfloat, rec) {
+    if world.hit(r, 0.001, max_float, rec) {
         // setup up temp vars
         let mut scattered = Ray::new(Vec3::new(), Vec3::new());
         let mut attenuation = Vec3::new();
@@ -147,9 +147,9 @@ fn render_ppm() -> Result<()> {
     let mut buffer = File::create("helloworld.ppm")?;
 
 
-    let nx = 600;
-    let ny = 300;
-    let aa_samples = 300;
+    let nx = 800;
+    let ny = 400;
+    let aa_samples = 1;
 
     write!(buffer, "P3\n{} {}\n255\n", nx, ny);
 
@@ -179,18 +179,18 @@ fn render_ppm() -> Result<()> {
                 let u = (i as f32 + random::<f32>()) / nx as f32;
                 let v = (j as f32 + random::<f32>()) / ny as f32;
                 let r = cam.get_ray(u, v);
-                let _p = r.point_at_parameter(2.0);
+                //let _p = r.point_at_parameter(2.0);
                 col = col + color(&r, &world, 0);
             }
 
             col = col / (aa_samples as f32);
             col = Vec3{e: [col.r().sqrt(), col.g().sqrt(), col.b().sqrt()]} ;
 
-            let ir = (255.99 * col.r()) as i64;
-            let ig = (255.99 * col.g()) as i64;
-            let ib = (255.99 * col.b()) as i64;
+            let ir = (255.99 * col.r()) as i32;
+            let ig = (255.99 * col.g()) as i32;
+            let ib = (255.99 * col.b()) as i32;
 
-            write!(buffer, "{} {} {}\n", ir, ig, ib);
+            writeln!(buffer, "{} {} {}\n", ir, ig, ib);
         }
     }
     Ok(())
@@ -201,12 +201,12 @@ fn main() {
     // Marker for benchmarking start
     let start = Instant::now();
 
-    let _x = render_ppm().unwrap();
+    render_ppm().unwrap();
 
     // Benchmarking
     let time = Instant::now() - start;
     let time_secs = time.as_secs();
     let time_millis = time.subsec_millis();
 
-    println!("Done in {} seconds.", time_secs as f32 + time_millis as f32 / 1000.0);
+    println!("Rendered in {} seconds.", time_secs as f32 + time_millis as f32 / 1000.0);
 }

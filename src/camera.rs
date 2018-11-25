@@ -1,6 +1,7 @@
 use vec3::{Vec3, unit_vector, cross, dot};
 use ray::Ray;
 use rand::random;
+use std::f64::consts::PI;
 
 pub fn random_in_unit_disk() -> Vec3 {
     let mut p = Vec3{e:[1.0, 1.0, 1.0]};
@@ -23,7 +24,7 @@ pub struct Camera {
 impl Camera {
     pub fn new(look_from: Vec3, look_at: Vec3, v_up: Vec3, v_fov: f32, aspect: f32, aperture: f32, focus_dist: f32) -> Camera {
         let lens_radius = aperture / 2.0;
-        let theta = v_fov*3.14/180.0;
+        let theta = v_fov * PI as f32 / 180.0;
         let half_height = (theta/2.0).tan();
         let half_width = aspect * half_height;
 
