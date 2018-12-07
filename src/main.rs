@@ -141,7 +141,7 @@ fn random_scene() -> Vec<Sphere> {
     scene
 }
 
-fn render_ppm() -> Result<()> {
+fn render_ppm(aa_quality: i32) -> Result<()> {
     // Writes out PPM file which is a text based image format. //
 
     let mut buffer = File::create("helloworld.ppm")?;
@@ -149,7 +149,7 @@ fn render_ppm() -> Result<()> {
 
     let nx = 800;
     let ny = 400;
-    let aa_samples = 1;
+    let aa_samples = aa_quality;
 
     write!(buffer, "P3\n{} {}\n255\n", nx, ny);
 
@@ -201,7 +201,7 @@ fn main() {
     // Marker for benchmarking start
     let start = Instant::now();
 
-    render_ppm().unwrap();
+    render_ppm(100).unwrap();
 
     // Benchmarking
     let time = Instant::now() - start;
