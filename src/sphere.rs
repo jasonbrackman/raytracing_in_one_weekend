@@ -1,15 +1,15 @@
 use rand::random;
 
+use hitable::{HitRecord, Hitable};
+use material::Material;
 use ray::Ray;
-use vec3::{Vec3, dot};
-use hitable::{Hitable, HitRecord};
-use material::{Material};
+use vec3::{dot, Vec3};
 
 //#[derive(Debug)]
 pub struct Sphere {
     pub center: Vec3,
     pub radius: f32,
-    pub material: Box<dyn Material>
+    pub material: Box<dyn Material>,
 }
 
 impl Hitable for Sphere {
@@ -21,10 +21,9 @@ impl Hitable for Sphere {
         let discriminant = b * b - a * c;
 
         if discriminant > 0.0 {
+            let mut temp = (-b - (b * b - a * c).sqrt()) / a;
 
-            let mut temp = (-b - (b*b-a*c).sqrt()) / a;
-
-            if temp < t_max && temp  > t_min {
+            if temp < t_max && temp > t_min {
                 rec.t = temp;
                 rec.p = r.point_at_parameter(rec.t);
                 rec.normal = (rec.p - self.center) / self.radius;
@@ -32,7 +31,7 @@ impl Hitable for Sphere {
                 return true;
             }
 
-            temp = (-b + (b*b-a*c).sqrt()) / a;
+            temp = (-b + (b * b - a * c).sqrt()) / a;
 
             if temp < t_max && temp > t_min {
                 rec.t = temp;
@@ -44,15 +43,17 @@ impl Hitable for Sphere {
         }
 
         false
-
     }
 }
 
 pub fn random_in_unit_sphere() -> Vec3 {
-    let mut p = Vec3{e:[5.0, 4.0, 3.0]};
+    let mut p = Vec3 { e: [5.0, 4.0, 3.0] };
     while p.squared_length() > 1.0 {
-        p = Vec3{e:[random::<f32>(), random::<f32>(), random::<f32>()]} * 2.0 - Vec3{e:[1.0, 1.0, 1.0]};
-    };
+        p = Vec3 {
+            e: [random::<f32>(), random::<f32>(), random::<f32>()],
+        } * 2.0
+            - Vec3 { e: [1.0, 1.0, 1.0] };
+    }
 
     p
 }

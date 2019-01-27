@@ -1,11 +1,11 @@
+use hitable::{HitRecord, Hitable};
+use material;
 use ray::Ray;
-use hitable::{Hitable, HitRecord};
 use sphere::Sphere;
 use vec3::Vec3;
-use material;
 
-pub struct HitableList <'a>{
-    pub hit_records: &'a Vec<Sphere>
+pub struct HitableList<'a> {
+    pub hit_records: &'a Vec<Sphere>,
 }
 
 //impl <'a> HitableList<'a> {
@@ -14,16 +14,16 @@ pub struct HitableList <'a>{
 ////    }
 //}
 
-impl <'a> Hitable for HitableList <'a> {
+impl<'a> Hitable for HitableList<'a> {
     fn hit(&self, r: &Ray, t_min: f32, t_max: f32, rec: &mut HitRecord) -> bool {
         let mut hit_anything = false;
         let mut closest_so_far = t_max;
 
-        let mut temp_rec = HitRecord{
-            t:0.0,
+        let mut temp_rec = HitRecord {
+            t: 0.0,
             p: Vec3::new(),
-            normal:Vec3::new(),
-            material: material::Lambertian::new(1.0, 1.0, 1.0)
+            normal: Vec3::new(),
+            material: material::Lambertian::new(1.0, 1.0, 1.0),
         };
 
         let mut closest_item = 0;
