@@ -20,19 +20,19 @@ pub trait Material: MaterialClone {
 // -- as it was always already in a borrowed state and couldn't be moved again.  So I needed a way
 // -- to copy/clone the material.
 pub trait MaterialClone {
-    fn clone_box(&self) -> Box<Material>;
+    fn clone_box(&self) -> Box<dyn Material>;
 }
 impl<T> MaterialClone for T
 where
     T: 'static + Material + Clone,
 {
-    fn clone_box(&self) -> Box<Material> {
+    fn clone_box(&self) -> Box<dyn Material> {
         Box::new(self.clone())
     }
 }
 
-impl Clone for Box<Material> {
-    fn clone(&self) -> Box<Material> {
+impl Clone for Box<dyn Material> {
+    fn clone(&self) -> Box<dyn Material> {
         self.clone_box()
     }
 }
